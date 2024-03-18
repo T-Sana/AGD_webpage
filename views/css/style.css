@@ -1,0 +1,28 @@
+@keyframes ombre_T_sana {
+  0% {
+    text-shadow: 0px 0px 5px #008080, 5px 0px 5px #008080, -5px 0px 5px #008080,
+      0px 5px 5px #008080, 0px -5px 5px #008080, 5px 5px 5px #008080,
+      5px -5px 5px #008080, -5px 5px 5px #008080, -5px -5px 5px #008080;
+  }
+  33% {
+    text-shadow: 0px 0px 5px #808000, 5px 0px 5px #808000, -5px 0px 5px #808000,
+      0px 5px 5px #808000, 0px -5px 5px #808000, 5px 5px 5px #808000,
+      5px -5px 5px #808000, -5px 5px 5px #808000, -5px -5px 5px #808000;
+  }
+  66% {
+    text-shadow: 0px 0px 5px #800080, 5px 0px 5px #800080, -5px 0px 5px #800080,
+      0px 5px 5px #800080, 0px -5px 5px #800080, 5px 5px 5px #800080,
+      5px -5px 5px #800080, -5px 5px 5px #800080, -5px -5px 5px #800080;
+  }
+  100% {
+    text-shadow: 0px 0px 5px #008080, 5px 0px 5px #008080, -5px 0px 5px #008080,
+      0px 5px 5px #008080, 0px -5px 5px #008080, 5px 5px 5px #008080,
+      5px -5px 5px #008080, -5px 5px 5px #008080, -5px -5px 5px #008080;
+  }
+}
+
+T_Sana {
+  animation-name: ombre_T_sana;
+  animation-duration: 15s;
+  animation-iteration-count: infinite;
+}
