@@ -25,7 +25,10 @@ router // Table de routage //
     var num; var is_in = false;
     for (let i=0; i<DBNS.length; i++) {
       if (`${req_db}.txt` == DBNS[i]) { is_in=true; num=i } };
-    if (is_in) { res.send(`${num}`) } else { erreur404(res) };
+    const nameDB = DBNS[num]; const dataDB = DBS[num];
+    if (is_in) {
+      res.render("acceuilDB",  { num, nameDB, dataDB })
+     } else { erreur404(res) };
   })
 
   .get("/*", async (req, res) => {

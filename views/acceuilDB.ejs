@@ -9,9 +9,7 @@
     <title>AGD | Acceuil</title>
 </head>
 <body>
-    Ceci est l'acceuil du site.<br><br>
-    <% for (let i=0; i< DBNS.length; i++) { %>
-        <a href="/src/db/<%= DBNS[i].slice(0, DBNS[i].length-4) %>"><T_Sana><%= DBNS[i] %></T_Sana></a><br>
-    <% } %>
+    Ceci est l'acceuil de la DB "<i><%= nameDB.slice(0, nameDB.length-4) %></i>".<br><br>
+    
 </body>
 </html>
