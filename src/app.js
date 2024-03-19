@@ -1,7 +1,7 @@
-require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const { router } = require('./router');
+const { hash } = require('./hash');
 const PORT = 3000;
 const app = express();
 

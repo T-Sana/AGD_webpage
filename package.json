@@ -5,8 +5,7 @@
     "main": "src/app.js",
     "scripts": {
         "start": "node src/app",
-        "debug": "nodemon src/app",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "debug": "nodemon src/app"
     },
     "keywords": [],
     "author": "T-Sana",
