@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<% const DBN = nameDB.slice(0, nameDB.length-4) %>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="./public/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>AGD | <%= DBN %> LOG-IN </title>
+</head>
+<body>
+    Ceci est le login de la DB "<i><%= DBN %></i>".<br><br>
+    Veuillez vous connecter:<br>
+    <form method="post", action="/src/db/<%= DBN %>/">
+        <label for="uname">Username: </label><input type="text"     name="username"><br>
+        <label for="paswd">Password: </label><input type="password" name="userpswd"><br>
+        <input type="submit" value="Confirmer">
+    </form>
+</body>
+</html>

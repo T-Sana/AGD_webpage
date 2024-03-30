@@ -9,14 +9,17 @@ function get_data_from(path) {
 function get_len_dir(path) {
     return fs.readdirSync(path).length;
   }
+
 const db = "databases";
 const n_dirs = get_len_dir(db);
-var DBS = [];
-var DBNS = [];
+
+var DBS = [], DBNS = [];
 for (let i=0; i<n_dirs; i++) {
-    let db_ = fs.readdirSync(db)[i];
-    let html = get_data_from(`${db}/${db_}`);
-    DBS[DBS.length] = html;
-    DBNS[DBNS.length] = db_;
+    let db_ = fs.readdirSync(db)[i]; // get the DB's name
+    let data = get_data_from(`${db}/${db_}`); // get the data from the DB
+    DBS[DBS.length] = JSON.parse(data); // save the data in js in an array
+    DBNS[DBNS.length] = db_; // save the name of the DB in an array
+    console.log(`Succesfully loaded database <${db_}>`);
 }
+
 module.exports = { DBS, DBNS };

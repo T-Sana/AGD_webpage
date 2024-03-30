@@ -1,8 +1,8 @@
 {
-    users: {
+    "users": {
         "admin": "cdab62ee41b3d33ebbad350259140addb5d66684"
     },
-    books: {
+    "books": {
         
     }
 }
