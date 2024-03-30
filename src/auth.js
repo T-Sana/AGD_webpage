@@ -2,11 +2,14 @@ const { DBS, DBNS } = require("./cdb.js");
 const { hash } = require("./hash.js");
 const jwt = require('jsonwebtoken');
 
-function get_rights(user, pwd, users) {
-    const { token } = req.cookies;
-    const token_info = jwt.verify(token, process.env.SECRET_KEY);
-    return 0
-}
+function get_rights(req) {
+    try {
+        const { token } = req.cookies;
+        const token_info = jwt.verify(token, process.env.SECRET_KEY);
+        return token_info.rights
+    }
+    catch { return 0 };
+};
 function log_in(req, res, username, password) {
     console.log(`<${username}>:<${password}>`);
     const db = req.originalUrl.slice(8).replace("/", "");

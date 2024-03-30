@@ -11,8 +11,8 @@
 <body>
     Ceci est l'acceuil de la DB "<i><%= nameDB.slice(0, nameDB.length-4) %></i>".<br><br>
     Vous êtes connecté·e:<br>
-    - Username: 
-    - Password: 
-    </form>
+    - Username: <%= token_info.u_n %><br>
+    - Password: <%= token_info.pwd %><br>
+    - NºDroits: <%= token_info.rights%>
 </body>
 </html>

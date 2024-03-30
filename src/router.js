@@ -1,9 +1,9 @@
 // Requires //
 const express = require("express");
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 const { DBS, DBNS } = require("./cdb.js");
 const { get_rights, log_in, is_logged } = require("./auth.js");
-const { hash } = require("./hash.js");
 
 
 // Fonctions //
@@ -15,11 +15,10 @@ router // Table de routage //
   })
 
   .get("/src", async (req, res) => {
-    console.log(DBS)
     res.render("acceuil", { DBS, DBNS });
   })
   .get("/r", async (req, res) => {
-    res.clearCookie('token') // TODO // TO REMOVE
+    res.clearCookie('token')
     res.redirect("/")
   })
   .get("/src/db/*", async (req, res) => {
@@ -33,10 +32,13 @@ router // Table de routage //
       if (!is_logged(req)) { // If not logged in ; going to login
         res.redirect(`/login/db/${req_db}`)
       } else { // If logged
-        res.render("acceuilDB",  { num, nameDB, dataDB });
+        const { token } = req.cookies;
+        const token_info = jwt.verify(token, process.env.SECRET_KEY);
+        res.render("acceuilDB",  { num, nameDB, dataDB, token_info });
       };
     } else { erreur404(res) };
   })
+
   .post("/src/db/*", async (req, res) => {
     const req_db = req.originalUrl.slice(8).replace("/", "");
     console.log(`<${req.body.username}>:<${req.body.userpswd}>`);
@@ -48,7 +50,7 @@ router // Table de routage //
     }
     else {
       console.log("Erreur de connection!")
-      res.send("Error connecting")
+      res.send(`Error connecting.<br><a href="/login/db/${req_db}">Try again</a>`)
     }
   })
 
