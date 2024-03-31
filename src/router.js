@@ -2,6 +2,7 @@
 const express = require("express");
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const { hash, hashy } = require("./hash.js")
 const { DBS, DBNS, insert } = require("./api_db.js");
 const { get_rights, log_in, is_logged } = require("./auth.js");
 const { request_API, APIS } = require("./api_get_info.js");
@@ -19,7 +20,7 @@ function db_exists(DB_NAME) {
 router // Table de routage //
   .get("/", (req, res) => {res.redirect("/src");}) // Racine redirigeant vers l'acceuil du site
   .get("/src", async(req, res) => {res.render("acceuil", { DBS, DBNS });}) // Acceuil du site
-  .get("/rm", async (req, res) => {res.clearCookie('token');res.redirect("/");}) // Removes token
+  .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/");}) // Removes token
   .get("/bot/db/*", async (req, res) => { // Donne les ID's des documents de la DB <any>
     const req_db = req.originalUrl.slice(8).replace("/", ""); // Get sollicited DB's name
     let {is_db, num} = db_exists(req_db); // Checking the existence of the sollicited DB
@@ -30,11 +31,12 @@ router // Table de routage //
     const req_db = req.originalUrl.slice(8).replace("/", ""); // Get sollicited DB's name
     let {is_db, num} = db_exists(req_db); // Checking the existence of the sollicited DB
     if (!is_db) { erreur404(res) } // If DB <any> doesn't exist
-    if (!is_logged(req)) {res.redirect(`/login/db/${req_db}`)} // In not logged in
+    else if (!is_logged(req)) {res.redirect(`/login/db/${req_db}`)} // In not logged in
     else { // If logged: extract and send token's info
       const nameDB = DBNS[num]; const dataDB = DBS[num];
       const { token } = req.cookies;
       const token_info = jwt.verify(token, process.env.SECRET_KEY);
+      token_info.pwd = hashy(token_info.pwd)
       res.render("acceuilDB",  { num, nameDB, dataDB, token_info });};
   })
   .post("/src/db/*", async (req, res) => { // Vrai login de la DB <any> (dans le code je veux dire)

@@ -33,4 +33,4 @@ for (let i=0; i<n_dirs; i++) {
     console.log(`Succesfully loaded database <${db_}>`);
 }
 
-module.exports = { DBS, DBNS, insert };
+module.exports = { DBS, DBNS, insert, get_rights };
