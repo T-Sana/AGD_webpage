@@ -1,6 +1,3 @@
-// TODO
-// Créer un système pour que si on a pas les droits on ne puisse acceder à la page (à voir dans router.js)
-// pcq là il y a déjà la fonction get rights, maintenant il faut juste vérifier que les droits soient ceux qu'il faut
 const { DBS, DBNS, get_rights } = require("./api_db.js");
 const { hash } = require("./hash.js");
 const jwt = require('jsonwebtoken');

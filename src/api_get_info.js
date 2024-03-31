@@ -1,5 +1,8 @@
 // Va sur internet pour pécho les infos dont on a besoingrâce au ISBN fourni
+// Imports
 const https = require("https");
+
+//Constantes
 const API1 = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
 const API2 = "https://openlibrary.org/api/books?jscmd=details&format=json&bibkeys=ISBN:"
 const imgURL = "https://covers.openlibrary.org/b/isbn/"
@@ -15,38 +18,30 @@ async function get_JSON_from(url) {
                 try {const jsonData = JSON.parse(data);resolve(jsonData);}
                 catch (error) {reject(error)}});
         }).on("error", (error) => {reject(error);});});
-};
-async function request_API(ISBN, API) {
-    const URL = `${API}${ISBN}`;console.log(URL);
-    try {
-        const data = await get_JSON_from(URL);
-        return extract(data, API, ISBN)
-    }
-    catch (error) {console.error("Error while getting data:", error.message);}
-};
-async function extract(data, API, ISBN) {
+}; async function request_API(ISBN, API) {
+    try {return extract(await get_JSON_from(`${API}${ISBN}`), API, ISBN)}
+    catch{ return {} };
+}; async function extract(data, API, ISBN) {
     const n_api = [API1, API2].indexOf(API)
-    console.log(n_api)
     var livre = {
-        titre: "",
-        auteurs: [],
-        edition: "",
-        editeur: "",
-        editeurs: "",
-        soustitre: "",
-        releaseDate: "",
-        description: "",
-        langues: "",
-        langue: "",
-        ISBN10: "",
-        ISBN13: "",
-        nPages: "",
-        format: "",
-        series: "",
-        sujets: [],
-        image: "",
-    }
-    if (n_api==0) { // GoogleBooks
+        titre: undefined,
+        auteurs: undefined,
+        edition: undefined,
+        editeur: undefined,
+        editeurs: undefined,
+        soustitre: undefined,
+        releaseDate: undefined,
+        description: undefined,
+        langues: undefined,
+        langue: undefined,
+        ISBN10: undefined,
+        ISBN13: undefined,
+        nPages: undefined,
+        format: undefined,
+        series: undefined,
+        sujets: undefined,
+        image: undefined,
+    }; if (n_api==0) { // GoogleBooks
         const requirements = {
             titre: "infos.title",
             auteurs: "infos.authors",
@@ -59,13 +54,13 @@ async function extract(data, API, ISBN) {
             langue: "infos.language",
             editeur: "infos.publisher",
             releaseDate: "infos.publishedDate"
-        }; try { const infos = data.items[0].volumeInfo // Nécessaire (ne pas supprimer)
-            const ISBNS = infos.industryIdentifiers  // Nécessaire (ne pas supprimer)
+        }; try { const infos = data.items[0].volumeInfo; // Nécessaire (ne pas supprimer)
+            const ISBNS = infos.industryIdentifiers;  // Nécessaire (ne pas supprimer)
             Object.keys(requirements).forEach( (value) => {
                 try { let result = eval(requirements[value])
                     if (result!=undefined) {livre[value] = result}}
                 catch {console.log(`La proprieté ${value} est indisponible`)}})
-        } catch (error) {console.log(`Aucune instance ne correspond à l'ISBN <${ISBN}>`)}
+        } catch {console.log(`Aucune instance ne correspond à l'ISBN <${ISBN}>`)}
     } else if (n_api==1) { // OpenLibrary
         const requirements = {
             titre: "infos.title",
@@ -95,32 +90,23 @@ async function extract(data, API, ISBN) {
                 } catch {console.log(`La proprieté ${value} est indisponible`)}})
         } catch (error) {console.log(`Aucune instance ne correspond à l'ISBN <${ISBN}>`)}
     } else { // Unspecified
-        console.log(`L'API sollicitée est inéxistante (${n_api})`);return data;
-    }; console.log(livre); // À supr
-    return data;
-};
-function compare_info(data1, data2) {
+        console.log(`L'API sollicitée (${n_api}) n'a pas de méthode associée.`);
+    return data;}; return livre;
+}; async function compare_info(data1, data2) {
     var infos = {
-        titre: "", auteurs: [],
-        edition: "", editeur: "",
-        editeurs: "", soustitre: "",
-        releaseDate: "", description: "",
-        langues: "", langue: "", ISBN10: "",
-        ISBN13: "", nPages: "", format: "",
-        series: "", sujets: [], image: "",
-    };
-    Object.keys(data1).forEach((key) => {
-        if (!data1.key in [undefined, "", []]) {infos.key = data1.key}
-    });
+        titre: undefined, auteurs: undefined,
+        edition: undefined, editeur: undefined,
+        editeurs: undefined, soustitre: undefined,
+        releaseDate: undefined, description: undefined,
+        langues: undefined, langue: undefined, ISBN10: undefined,
+        ISBN13: undefined, nPages: undefined, format: undefined,
+        series: undefined, sujets: undefined, image: undefined,
+    }; Object.keys(data1).forEach((key) => {infos[key] = data1[key]});
     Object.keys(data2).forEach((key) => {
-        if (!data2.key in [undefined, "", []]) {
-            if (!infos.key in [undefined, "", []]) {
-                infos.key = data2.key
-            } else {
-                // TODO // Pour l'instant s'il y a des champ renseignés par les deux APIs c'est tjrs la 1e qui est gardée
-            };
-        };
-    });
+        if (infos[key] == undefined) { infos[key] = data2[key] }
+        else {}; // TODO // Pour l'instant s'il y a des champ renseignés par les deux APIs c'est tjrs la 1e qui est gardée
+    }); return infos;
 };
 
-module.exports = { request_API, APIS };
+// Exports
+module.exports = { request_API, APIS, compare_info };
