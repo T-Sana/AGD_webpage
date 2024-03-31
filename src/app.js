@@ -1,14 +1,16 @@
-require('dotenv').config();
+const dotenv = require('dotenv');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { router } = require('./router');
+
 const PORT = process.env.PORT || 3000;
 const app = express();
+dotenv.config();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('views'));
 app.use(express.static('views/css'));
 app.use(express.static('views/public'));

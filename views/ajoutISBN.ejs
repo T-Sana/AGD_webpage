@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="./public/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <title>AGD | Acceuil</title>
+    <title>AGD | <%= DBN %> Ajout</title>
 </head>
 <body>
-    Ceci est l'acceuil du site.<br><br>
-    <% for (let i=0; i< DBNS.length; i++) { %>
-        <a href="/src/db/<%= DBNS[i].slice(0, DBNS[i].length-4) %>"><T_Sana><%= DBNS[i] %></T_Sana></a><br>
-    <% } %><br>
-    To logout click <a href="/rm">HERE</a>
+    Ceci est la page d'ajout à la DB <i><%= DBN %></i>.<br><br>
+    </script>
+    <form method="post", action="/src/mod/db/<%= DBN %>/add-by-ISBN">
+        ISBN: <input type="text" name="ISBN"><br>
+        <input type="submit" value="Confirmer">
+    </form>
 </body>
 </html>

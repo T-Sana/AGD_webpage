@@ -5,7 +5,8 @@
     "main": "src/app.js",
     "scripts": {
         "start": "node src/app",
-        "debug": "nodemon src/app"
+        "debug": "nodemon src/app",
+        "test": "node test.js"
     },
     "keywords": [],
     "author": "T-Sana",

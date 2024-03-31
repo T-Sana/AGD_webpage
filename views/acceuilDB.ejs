@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="fr">
+<% DBN = nameDB.slice(0, nameDB.length-4) %>
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="./public/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <title>AGD | Acceuil</title>
+    <title>AGD | Acceuil <%= DBN %></title>
 </head>
 <body>
-    Ceci est l'acceuil de la DB "<i><%= nameDB.slice(0, nameDB.length-4) %></i>".<br><br>
+    Ceci est l'acceuil de la DB "<i><%= DBN %></i>".<br><br>
     Vous êtes connecté·e:<br>
     - Username: <%= token_info.u_n %><br>
     - Password: <%= token_info.pwd %><br>
-    - NºDroits: <%= token_info.rights%>
+    - NºDroits: <%= token_info.rights%><br>
+    <a href="/src/mod/db/<%= DBN %>/add-by-ISBN"><button>Add by ISBN</button></a><br>
+    <a href="/src/mod/db/<%= DBN %>/add"><button>Add</button></a><br>
+    <a href="/src/view/db/<%= DBN %>"><button>View</button></a><br>
 </body>
 </html>

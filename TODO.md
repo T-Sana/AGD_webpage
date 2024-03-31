@@ -1,7 +1,7 @@
 # TODO
 
 ## Vite
-- [ ] Système de création d'instances
+- [ ] Système de création d'instances via la wp
 - [ ] Système de prêts
 - [ ] Système de droits
 

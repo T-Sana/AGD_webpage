@@ -26,3 +26,7 @@ T_Sana {
   animation-duration: 15s;
   animation-iteration-count: infinite;
 }
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
