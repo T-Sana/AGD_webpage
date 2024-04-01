@@ -11,15 +11,9 @@
 <body>
     Ceci est la page d'ajout à la DB <i><%= DBN %></i>.<br><br>
     <form method="post", action="/src/mod/db/<%= DBN %>/add">
-        Titre: <input type="text" name="titre"><br>
-        Auteur: <input type="text" name="auteur"><br>
-        Langue: <input type="text" name="langue"><br>
-        Date: <input type="text" name="date"><br>
-        ISBN13: <input type="text" name="ISBN13"><br>
-        ISBN10: <input type="text" name="ISBN10"><br>
-        Edition: <input type="text" name="edition"><br>
-        Nº pages: <input type="text" name="pages"><br>
-        URL img: <input type="text" name="img"><br>
+        <% Object.keys(_livre_).forEach((key) => { %>
+            <%= key %>: <input type="text" name="<%= key %>"><br>
+        <% }) %>
         <input type="submit" value="Confirmer">
     </form>
 </body>

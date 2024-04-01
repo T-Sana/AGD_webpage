@@ -9,6 +9,15 @@ const imgURL = "https://covers.openlibrary.org/b/isbn/"
 const posFinImgURL = ["-L.jpg", "-M.jpg", "-S.jpg"]
 const APIS = [API1, API2, imgURL, posFinImgURL]
 
+//
+const _livre_ = {
+    titre: undefined, auteurs: undefined, edition: undefined,
+    editeurs: undefined, soustitre: undefined, releaseDate: undefined,
+    description: undefined, langue: undefined, ISBN10: undefined,
+    ISBN13: undefined, nPages: undefined, format: undefined,
+    series: undefined, sujets: undefined, image: undefined,
+};
+
 // Fonctions
 async function get_JSON_from(url) {
     return new Promise((resolve, reject) => {
@@ -109,4 +118,4 @@ async function get_JSON_from(url) {
 };
 
 // Exports
-module.exports = { request_API, APIS, compare_info };
+module.exports = { request_API, APIS, compare_info, _livre_ };

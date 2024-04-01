@@ -1,6 +1,7 @@
-const { DBS, DBNS, get_rights } = require("./api_db.js");
+const { get_rights } = require("./api_db.js");
 const { hash } = require("./hash.js");
 const jwt = require('jsonwebtoken');
+var { DBS, DBNS } = require("./api_db.js");
 
 function log_in(req, res, username, password){ // Login
     const db=req.originalUrl.slice(8).replace("/",""); // Get the DB name

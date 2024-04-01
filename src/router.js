@@ -2,10 +2,11 @@
 const express = require("express");
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const { hash, hashy } = require("./hash.js")
-const { DBS, DBNS, insert } = require("./api_db.js");
+const { hash, hashy } = require("./hash.js");
+var { DBS, DBNS } = require("./api_db.js");
+const { insert, write_into, db_dir } = require("./api_db.js");
 const { get_rights, log_in, is_logged } = require("./auth.js");
-const { request_API, APIS, compare_info } = require("./api_get_info.js");
+const { request_API, APIS, compare_info, _livre_ } = require("./api_get_info.js");
 
 
 // Fonctions //
@@ -63,24 +64,29 @@ router // Table de routage //
     const DBN = req.originalUrl.slice(13).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db) {erreur404(res);}
     else {res.send(get_books(DBN))};
-  }).get("/src/mod/db/*/add*", async (req, res) => { // Get infos for une instance dans la DB <any>
+  }).get("/src/mod/db/*/add", async (req, res) => { // Get infos for une instance dans la DB <any>
     var DBN = req.originalUrl.slice(12); DBN = DBN.slice(0, DBN.indexOf("/")); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
-    res.render("ajout", {DBN});
+    res.render("ajout", {DBN, _livre_});
   })
 /*
   ,---------------------+---------------------¬
   |  /\ OVER HERE: DONE | \/ UNDER HERE: TODO |
   `---------------------+---------------------´
 */
-  .post("/src/mod/db/*/add*", async (req, res) => { // Ajout de l'instance dans la DB <any>
+  .post("/src/mod/db/*/add", async (req, res) => { // Ajout de l'instance dans la DB <any>
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
-    console.log(req.body); // Has to write this into the DB // TODO
-    console.log(DBS[DBNS.indexOf(`${DBN}.txt`)].books)
-    DBS[DBNS.indexOf(`${DBN}.txt`)] = insert(await request_API(req.body.ISBN13), DBS[DBNS.indexOf(`${DBN}.txt`)])
-    console.log(DBS[DBNS.indexOf(`${DBN}.txt`)].books) // À mettre dans la DB <any> // TODO
-    res.redirect(req.originalUrl); // Goes back to the input page
+    req.body.editeurs = req.body.editeurs.split(", ");
+    req.body.auteurs = req.body.auteurs.split(", ");
+    req.body.sujets = req.body.sujets.split(", ");
+    req.body.series = req.body.series.split(", ");
+    DBS[DBNS.indexOf(`${DBN}.txt`)] = insert(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)]); // Insert the new instance into the DB variable
+    write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2));  // Update the .txt DB
+    console.log(req.query.loop)
+    try {
+      if (req.query.loop == "true") {res.redirect(req.originalUrl); // Goes back to the input page
+      } else {throw Error}} catch {res.redirect(`/src/db/${DBN}`)}; // Va à l'acceuil de la DB
   })
   .get("/src/mod/db/*/add-by-ISBN", async (req, res) => { // Get ISBN pour une instance à mettre dans la DB <any>
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-12).replace("/", ""); // Get the DB's name

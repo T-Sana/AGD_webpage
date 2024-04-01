@@ -1,21 +1,97 @@
 {
-    "users": {
-        "root" : ["37e3ca6397c127d615efd7d5f02272960d7472906254bb7cf42f33c8f8759064506c78c442820fb4dcaad228856a76cfb24f25be102910fe8a8f36777f5023cd", 9],
-        "admin": ["c1d69ca728837014fe076543155086699ba82fa3b630ebb18d5441b59ca1b19caeb5506998ac1139035bb12aab221cd915e21ea86b81675ead4c8a0f9a51a6c0", 8],
-        "super": ["b6206cfea8b2c5de034e29c526ae414b044317cbc9b10f941d82a2d907c83860915a33c2915edff18229ce178ed612d38d69865a4802c66a12599e88323df05a", 5],
-        "r"    : ["cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e", 4]
+  "users": {
+    "root": [
+      "37e3ca6397c127d615efd7d5f02272960d7472906254bb7cf42f33c8f8759064506c78c442820fb4dcaad228856a76cfb24f25be102910fe8a8f36777f5023cd",
+      9
+    ],
+    "admin": [
+      "c1d69ca728837014fe076543155086699ba82fa3b630ebb18d5441b59ca1b19caeb5506998ac1139035bb12aab221cd915e21ea86b81675ead4c8a0f9a51a6c0",
+      8
+    ],
+    "super": [
+      "b6206cfea8b2c5de034e29c526ae414b044317cbc9b10f941d82a2d907c83860915a33c2915edff18229ce178ed612d38d69865a4802c66a12599e88323df05a",
+      5
+    ],
+    "r": [
+      "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
+      4
+    ]
+  },
+  "books": {
+    "e4310b0d-4e31-40fa-b6fd-10fca02aafd9": {
+      "titre": "qwerty",
+      "auteurs": [
+        "yo"
+      ],
+      "edition": "",
+      "editeurs": [
+        ""
+      ],
+      "soustitre": "",
+      "releaseDate": "",
+      "description": "",
+      "langue": "",
+      "ISBN10": "",
+      "ISBN13": "",
+      "nPages": "",
+      "format": "",
+      "series": [
+        ""
+      ],
+      "sujets": [
+        ""
+      ],
+      "image": ""
     },
-
-    "books": {
-        "id_1":  {"id": "1",     "titre": "La llarga migdiada de Déu",                   "soustitre": "",                                    "auteurs": ["Pep Coll"],                                                                                                                "langue": "Català",         "date": "01-2023",          "ISBN_13": "9788475889887",     "ISBN_10": "8475889883",    "n_pages": "",      "edition": "Proa",              "img": "https://covers.openlibrary.org/b/isbn/8475889883-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_2":  {"id": "2",     "titre": "Martinet",                                    "soustitre": "",                                    "auteurs": ["Lola Anglada i Sarriera"],                                                                                                 "langue": "Català",         "date": "1997-10-01",       "ISBN_13": "9788482563862",     "ISBN_10": "8482563866",    "n_pages": "",      "edition": "",                  "img": "https://covers.openlibrary.org/b/isbn/8482563866-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_3":  {"id": "3",     "titre": "Manolito Gafotas",                            "soustitre": "",                                    "auteurs": ["Elvira Lindo"],                                                                                                            "langue": "Espanyol",       "date": "2000-04",          "ISBN_13": "9788420458540",     "ISBN_10": "8420458546",    "n_pages": "",      "edition": "Alfaguara",         "img": "https://covers.openlibrary.org/b/isbn/8420458546-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_4":  {"id": "4",     "titre": "No mireu sota el llit",                       "soustitre": "",                                    "auteurs": ["Jaume Cela"],                                                                                                              "langue": "Català",         "date": "2006-04",          "ISBN_13": "9788448919115",     "ISBN_10": "8448919114",    "n_pages": "",      "edition": "Barcanova",         "img": "https://covers.openlibrary.org/b/isbn/8448919114-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_5":  {"id": "5",     "titre": "I la mort em parlava",                        "soustitre": "",                                    "auteurs": ["Noemi Bagés"],                                                                                                             "langue": "Català",         "date": "2006",             "ISBN_13": "9788448917647",     "ISBN_10": "8448917642",    "n_pages": "",      "edition": "Barcanova",         "img": "https://covers.openlibrary.org/b/isbn/8448917642-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_6":  {"id": "6",     "titre": "El Pont de la Llum",                          "soustitre": "",                                    "auteurs": ["Toni Cotet i Masià"],                                                                                                      "langue": "Català",         "date": "2010-03-15",       "ISBN_13": "9788447919963",     "ISBN_10": "844791996X",    "n_pages": "",      "edition": "",                  "img": "https://covers.openlibrary.org/b/isbn/8447919963-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_7":  {"id": "7",     "titre": "Plantar cara",                                "soustitre": "",                                    "auteurs": ["Lluís Busquets i Grabulosa"],                                                                                              "langue": "Català",         "date": "1996-01-01",       "ISBN_13": "9788448903701",     "ISBN_10": "8448903706",    "n_pages": "",      "edition": "Barcanova",         "img": "https://covers.openlibrary.org/b/isbn/8448903706-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_8":  {"id": "8",     "titre": "Mirades al mirall",                           "soustitre": "",                                    "auteurs": ["Maria Hede"],                                                                                                              "langue": "Català",         "date": "1998",             "ISBN_13": "9788448905507",     "ISBN_10": "8448905504",    "n_pages": "",      "edition": "Barcanova",         "img": "https://covers.openlibrary.org/b/isbn/8448905504-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_9":  {"id": "9",     "titre": "Les cartes d'Anna",                           "soustitre": "",                                    "auteurs": ["Jaume Fuster"],                                                                                                            "langue": "Català",         "date": "1996-01-01",       "ISBN_13": "9788448902230",     "ISBN_10": "8448902238",    "n_pages": "",      "edition": "Barcanova",         "img": "https://covers.openlibrary.org/b/isbn/8448902238-L.jpg",    "infos_pret": "pret_()"                                                             },
-        "id_10": {"id": "10",    "titre": "L'Impostor",                                  "soustitre": "",                                    "auteurs": ["Manuel L. Alonso"],                                                                                                        "langue": "Català",         "date": "1996-01-01",       "ISBN_13": "9788448902377",     "ISBN_10": "8448902378",    "n_pages": "",      "edition": "Barcanova",         "img": "https://covers.openlibrary.org/b/isbn/8448902378-L.jpg",    "infos_pret": "pret_()"                                                             }
+    "7ab70f74-1a59-4657-9e5d-56b9a7c94a48": {
+      "titre": "",
+      "auteurs": [
+        ""
+      ],
+      "edition": "",
+      "editeurs": [
+        ""
+      ],
+      "soustitre": "",
+      "releaseDate": "",
+      "description": "",
+      "langue": "",
+      "ISBN10": "",
+      "ISBN13": "",
+      "nPages": "",
+      "format": "",
+      "series": [
+        ""
+      ],
+      "sujets": [
+        ""
+      ],
+      "image": ""
+    },
+    "3fa0f366-0dfd-4046-bd6b-c78a8707d9ad": {
+      "titre": "",
+      "auteurs": [
+        ""
+      ],
+      "edition": "",
+      "editeurs": [
+        ""
+      ],
+      "soustitre": "",
+      "releaseDate": "",
+      "description": "",
+      "langue": "",
+      "ISBN10": "",
+      "ISBN13": "",
+      "nPages": "",
+      "format": "",
+      "series": [
+        ""
+      ],
+      "sujets": [
+        ""
+      ],
+      "image": ""
     }
+  }
 }
