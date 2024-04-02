@@ -24,6 +24,9 @@ function db_exists(DB_NAME) {
 
 router // Table de routage //
   .get("/", (req, res) => {res.redirect("/src");}) // Racine redirigeant vers l'acceuil du site
+  .get("/src/new/db", async (req, res) => {
+    res.render("new_db");
+  })
   .get("/src", async(req, res) => {res.render("acceuil", { DBS, DBNS });}) // Acceuil du site
   .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/");}) // Removes token
   .get("/bot/db/*", async (req, res) => { // Donne les ID's des documents de la DB <any>
