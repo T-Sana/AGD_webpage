@@ -1,9 +1,0 @@
-{
-    "users": {
-        "admin": ["0dd3e512642c97ca3f747f9a76e374fbda73f9292823c0313be9d78add7cdd8f72235af0c553dd26797e78e1854edee0ae002f8aba074b066dfce1af114e32f8", 8]
-    },
-    "books": {
-        "id_1": {"id": "1", "titre": "Monsieur Ibrahim et les fleurs du Coran", "soustitre": "", "auteurs": ["Eric-Emmanuel Schmitt"], "langue": "Francès", "date": "2004", "ISBN_13": "9782210754676", "ISBN_10": "2210754674", "n_pages": "", "edition": "Magnard", "img": "https://covers.openlibrary.org/b/isbn/2210754674-L.jpg", "statut": "Disponible", "infos_pret": "pret"},
-        "id_2": {"id": "2", "titre": "Antigone", "soustitre": "", "auteurs": ["Sophocle"], "langue": "Francès", "date": "2005", "ISBN_13": "9782290346853", "ISBN_10": "2290346853", "n_pages": "", "edition": "J'ai lu", "img": "https://covers.openlibrary.org/b/isbn/2290346853-L.jpg", "statut": "Disponible", "infos_pret": "pret"}
-    }
-}
