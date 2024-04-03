@@ -11,17 +11,29 @@
 <body>
     Ceci est la page pour créer une DB.<br><br>
     Pour créer la DB veuillez vous connecter en <i>root</i> sur AGD-WP.<br><br>
-    <form>
+    <script>
+        console.log("HEY");
+        function check_pass() {
+            console.log("HERE");
+            const pwd1 = document.getElementById('pwd1').value;
+            if (pwd1 == document.getElementById('pwd2').value && pwd1 != "") {
+                document.getElementById('submit').disabled = false;
+            } else {
+                document.getElementById('submit').disabled = true;
+            }
+        }
+    </script>
+    <form method="post" action="/src/new/db/">
         <h4>Connexion AGD-WP:</h4>
-        Username: <input type="text"     name="username"><br>
-        Password: <input type="password" name="userpswd"><br>
+        Username: <input type="text"     name="username" required><br>
+        Password: <input type="password" name="userpswd" required><br>
         <h4>Infos de la DB:</h4>
-        Nom de la DB: <input type="text" name="DB_name"><br>
-        User root DB: root<br>
-        Pswd root DB: <input type="password" name="userpswd"><br>
-        Confirm pswd: <input type="password" name="userpswd"><br>
+        Nom de la DB: <input type="text" name="DB_name" required><br>
+        User root DB: <input type="text" name="DB_root" value="root" required><br>
+        Pswd root DB: <input type="password" name="pwd1" id="pwd1" onkeyup='check_pass();' required><br>
+        Confirm pswd: <input type="password" name="pwd2" id="pwd2" onkeyup='check_pass();' required><br>
         
-        <input type="submit" value="Confirmer">
+        <input type="submit" value="Confirmer" id="submit" disabled>
     </form>
 </body>
 </html>

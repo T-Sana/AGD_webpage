@@ -3,7 +3,7 @@ const express = require("express");
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const { hash, hashy } = require("./hash.js");
-var { DBS, DBNS } = require("./api_db.js");
+var { DBS, DBNS, creer_db } = require("./api_db.js");
 const { insert, write_into, db_dir } = require("./api_db.js");
 const { get_rights, log_in, is_logged } = require("./auth.js");
 const { request_API, APIS, compare_info, _livre_ } = require("./api_get_info.js");
@@ -26,6 +26,16 @@ router // Table de routage //
   .get("/", (req, res) => {res.redirect("/src");}) // Racine redirigeant vers l'acceuil du site
   .get("/src/new/db", async (req, res) => {
     res.render("new_db");
+  })
+  .post("/src/new/db", async (req, res) => {
+    var infos = req.body;infos.pwd1 = hash(infos.pwd1);
+    var DB = {users: {[infos.DB_root]: [infos.pwd1, 9]},books: {}};
+    if (infos.DB_name in DBNS) {
+      res.send(`DB <${infos.DB_name}> already exists !`);
+    } else {
+      creer_db(`${db_dir}/${infos.DB_name}.txt`, JSON.stringify(DB, null, 2), infos.DB_name);
+      res.send("DB has been created");
+    };
   })
   .get("/src", async(req, res) => {res.render("acceuil", { DBS, DBNS });}) // Acceuil du site
   .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/");}) // Removes token

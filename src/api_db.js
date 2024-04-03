@@ -24,6 +24,11 @@ function get_rights(req) {
     else {var id;do {id = new_id();}
         while (id in db.books);
         db.books[id] = instance;};
+}; function creer_db(path, data, name="any") {
+    fs.writeFile(path, data, (err) => {
+        if (err) throw err;
+        console.log(`Successfully created <${name}> database!`);
+    });
 };
 
 const db_dir = "databases";
@@ -39,4 +44,4 @@ for (let i=0; i<n_dirs; i++) {
     catch {console.log(`Couldn't load database named <${db_}>`);};
 };
 
-module.exports = { DBS, DBNS, insert, get_rights, write_into, db_dir };
+module.exports = { DBS, DBNS, insert, get_rights, write_into, db_dir,creer_db, ajouter };
