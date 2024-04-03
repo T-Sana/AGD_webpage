@@ -10,14 +10,18 @@
     <title>AGD | Acceuil <%= DBN %></title>
 </head>
 <body>
-    Ceci est l'acceuil de la DB "<i><%= DBN %></i>".<br><br>
-    Vous êtes connecté·e:<br>
-    - Username: <%= token_info.u_n %><br>   
-    - Password: <%= token_info.pwd %><br>
-    - NºDroits: <%= token_info.rights%><br>
+    <h1>Acceuil <<i><%= DBN %></i>>'s DB</h1>
+    <h2>Vos données:</h2>
+    <ul>
+        <li>Username: <%= token_info.u_n %></li>
+        <li>Password: <%= token_info.pwd %></li>
+        <li>NºDroits: <%= token_info.rights%></li>
+    </ul>
+    <h2>Actions:</h2>
     <a href="/src/mod/db/<%= DBN %>/add-by-ISBN"><button>Add by ISBN</button></a><br>
     <a href="/src/mod/db/<%= DBN %>/add"><button>Add</button></a><br>
     <a href="/src/view/db/<%= DBN %>"><button>View</button></a><br>
-    <a href="/src/mod/db/<%= DBN %>/add?loop=true"><button>Ajouter en boucle</button></a>
+    <a href="/src/mod/db/<%= DBN %>/add?loop=true"><button>Ajouter en boucle</button></a><br><br>
+    Retourner à l'<a href="/">acceuil</a>
 </body>
 </html>
