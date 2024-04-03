@@ -1,18 +1,18 @@
 // Requires //
-const express = require("express");
-const jwt = require('jsonwebtoken');
-const router = express.Router();
-const { hash, hashy } = require("./hash.js");
-var { DBS, DBNS, creer_db } = require("./api_db.js");
-const { insert, write_into, db_dir } = require("./api_db.js");
-const { get_rights, log_in, is_logged } = require("./auth.js");
+const { get_databases, creer_db, insert, write_into, db_dir } = require("./api_db.js");
 const { request_API, APIS, compare_info, _livre_ } = require("./api_get_info.js");
+const { get_rights, log_in, is_logged } = require("./auth.js");
+const { hash, hashy } = require("./hash.js");
+const jwt = require('jsonwebtoken');
+const express = require("express");
+const router = express.Router();
 
 
 // Fonctions //
 function erreur404(res) {return res.render("404")};
 function get_books(database) {return DBS[DBNS.indexOf(`${database}.txt`)].books};
 function db_exists(DB_NAME) {
+  var { DBS, DBNS } = get_databases(); // Get databases info
   var num=-1; var is_db=false;
   for (let i=0; i<DBNS.length; i++) { if (DBNS[i] == `${DB_NAME}.txt`)
   { is_db=true; num=i };}; return { is_db, num };
@@ -24,27 +24,27 @@ function db_exists(DB_NAME) {
 
 router // Table de routage //
   .get("/", (req, res) => {res.redirect("/src");}) // Racine redirigeant vers l'acceuil du site
-  .get("/src/new/db", async (req, res) => {
-    res.render("new_db");
+  .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/")}) // Removes token
+  .get("/src",async (req, res) => {var { DBS, DBNS } = get_databases(); // Acceuil du site
+  console.log(DBNS)  
+  res.render("acceuil", { DBS, DBNS });
   })
+  .get("/src/new/db", async (req, res) => {res.render("new_db")}) // Create a new DB
   .post("/src/new/db", async (req, res) => {
+    var { DBS, DBNS } = get_databases(); // Get databases info
     var infos = req.body;infos.pwd1 = hash(infos.pwd1);
     var DB = {users: {[infos.DB_root]: [infos.pwd1, 9]},books: {}};
-    if (infos.DB_name in DBNS) {
-      res.send(`DB <${infos.DB_name}> already exists !`);
-    } else {
-      creer_db(`${db_dir}/${infos.DB_name}.txt`, JSON.stringify(DB, null, 2), infos.DB_name);
-      res.send("DB has been created");
-    };
-  })
-  .get("/src", async(req, res) => {res.render("acceuil", { DBS, DBNS });}) // Acceuil du site
-  .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/");}) // Removes token
-  .get("/bot/db/*", async (req, res) => { // Donne les ID's des documents de la DB <any>
+    if (DBNS.includes(`${infos.DB_name}.txt`)||infos.DB_name=="_"){res.send(`DB <${infos.DB_name}> already exists !`)} else {
+    creer_db(`${db_dir}/${infos.DB_name}.txt`, JSON.stringify(DB, null, 2), infos.DB_name);
+    res.send(`The DB ${req.body.DB_NAME} has been created <a href="/src/db/${req.body.DB_name}">HERE</a>.`)};
+  }).get("/bot/db/*", async (req, res) => { // Donne les ID's des documents de la DB <any>
+    var { DBS, DBNS } = get_databases(); // Get databases info
     const req_db = req.originalUrl.slice(8).replace("/", ""); // Get sollicited DB's name
     let {is_db, num} = db_exists(req_db); // Checking the existence of the sollicited DB
     if (!is_db) { return erreur404(res) } // If DB <any> doesn't exist
     res.send(Object.keys(DBS[DBNS.indexOf(`${req_db}.txt`)].books))
   }).get("/src/db/*", async (req, res) => { // Acceuil de la DB <any>
+    var { DBS, DBNS } = get_databases(); // Get databases info
     const req_db = req.originalUrl.slice(8).replace("/", ""); // Get sollicited DB's name
     let {is_db, num} = db_exists(req_db); // Checking the existence of the sollicited DB
     if (!is_db) { return erreur404(res) } // If DB <any> doesn't exist
@@ -88,6 +88,7 @@ router // Table de routage //
   `---------------------+---------------------´
 */
   .post("/src/mod/db/*/add", async (req, res) => { // Ajout de l'instance dans la DB <any>
+    var { DBS, DBNS } = get_databases(); // Get databases info
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
     req.body.editeurs = req.body.editeurs.split(", ");

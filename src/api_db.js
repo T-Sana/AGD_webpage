@@ -13,7 +13,7 @@ function write_into(path, data) {
     });
 };
 function get_dir(path) {return fs.readdirSync(path)};
-function get_len_dir(path) {return get_dir(path).length;};
+function get_len_dir(path) {return get_dir(path).length-1};
 function new_id(DB) {var id;do{id=randomUUID()}while(id in Object.keys(DB.books));return id};
 function insert(instance, DB) {console.log(instance);DB.books[new_id(DB)] = instance;return DB};
 function get_rights(req) {
@@ -32,16 +32,22 @@ function get_rights(req) {
 };
 
 const db_dir = "databases";
-const n_dirs = get_len_dir(db_dir);
 
-var DBS = [], DBNS = [];
-for (let i=0; i<n_dirs; i++) {
-    try {let db_ = get_dir(db_dir )[i]; // get the DB's name
-        let data = get_data_from(`${db_dir}/${db_}`); // get the data from the DB
-        DBS[DBS.length] = JSON.parse(data); // save the data in js in an array
-        DBNS[DBNS.length] = db_; // save the name of the DB in an array
-        console.log(`Succesfully loaded database <${db_}>`);}
-    catch {console.log(`Couldn't load database named <${db_}>`);};
+function get_databases() {
+    const n_dirs = get_len_dir(db_dir);
+    var dbs = get_dir(db_dir);
+    dbs.splice(dbs.indexOf("_.txt"));
+    var DBS = [], DBNS = [];
+    for (let i=0; i<n_dirs; i++) {
+        try {var db_ = dbs[i]; // get the DB's name
+            let data = get_data_from(`${db_dir}/${db_}`); // get the data from the DB
+            DBS[DBS.length] = JSON.parse(data); // save the data in js in an array
+            DBNS[DBNS.length] = db_; // save the name of the DB in an array
+            console.log(`Succesfully loaded database <${db_}>`);}
+        catch {console.log(`Couldn't load database named <${db_}>`);};
+    }; return {DBS, DBNS};
 };
 
-module.exports = { DBS, DBNS, insert, get_rights, write_into, db_dir,creer_db, ajouter };
+get_databases()
+
+module.exports = { get_databases, insert, get_rights, write_into, db_dir, creer_db, ajouter };
