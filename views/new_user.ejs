@@ -20,9 +20,10 @@
         }
     </script>
     Ceci est la page pour créer un user pour la DB <<%= DBN %>>.<br><br>
-    <form method="post" action="/src/db/<%= DBN %>/users/new"><h4>Infos du user:</h4>
+    <form method="post" action="/src/users/db/<%= DBN %>/new"><h4>Infos du user:</h4>
         Username: <input type="text" name="username" value="root" required><br>
-        Rights: <input type="text" value="1" placeholder="1-5" name="rights" value="root" required><br>
+        <% if (is_adm) { %>Rights: <input type="text" value="1" placeholder="1-5" name="rights" value="root" required><br>
+        <% } else { %>Rights: 1 (user lambda)<br><% } %>
         Password: <input type="password" name="pwd1" id="pwd1" onkeyup='check_pass();' required><br>
         Confirm: <input type="password" name="pwd2" id="pwd2" onkeyup='check_pass();' required><br>
         <input type="submit" value="Confirmer" id="submit" disabled>

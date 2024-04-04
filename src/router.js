@@ -13,6 +13,9 @@ function erreur404(res) {return res.render("404")};
 function get_books(database) {
   var { DBS, DBNS } = get_databases(); // Get databases info
   return DBS[DBNS.indexOf(`${database}.txt`)].books
+};function get_users(database) {
+  var { DBS, DBNS } = get_databases(); // Get databases info
+  return DBS[DBNS.indexOf(`${database}.txt`)].usersget_users
 };function db_exists(DB_NAME) {
   var { DBS, DBNS } = get_databases(); // Get databases info
   var num=-1; var is_db=false;
@@ -22,6 +25,8 @@ function get_books(database) {
   try{return jwt.verify(req.cookies.token, process.env.SECRET_KEY) } catch {};
 };function can_write(token) {
   var wr = false;[4,5,9].some((value) => {if (token.rights == value) {wr=true}});return wr;
+};function can_admin(token) {
+  var wr = false;[8,9].some((value) => {if (token.rights == value) {wr=true}});return wr;
 };
 
 router // Table de routage //
@@ -29,8 +34,8 @@ router // Table de routage //
   .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/")}) // Removes token
   .get("/src",async (req, res) => {var { DBS, DBNS } = get_databases(); // Acceuil du site
     res.render("acceuil", { DBS, DBNS });
-  }).get("/src/new/db", async (req, res) => {res.render("new_db")}) // Create a new DB
-  .post("/src/new/db", async (req, res) => {
+  }).get("/src/new/db", async (req, res) => {res.render("new_db")}) // To create a new DB
+  .post("/src/new/db", async (req, res) => { // Creates a new DB
     var { DBS, DBNS } = get_databases(); // Get databases info
     var infos = req.body;infos.pwd1 = hash(infos.pwd1);
     var DB = {users: {[infos.DB_root]: [infos.pwd1, 9]},books: {}};
@@ -82,35 +87,11 @@ router // Table de routage //
     var DBN = req.originalUrl.slice(12); DBN = DBN.slice(0, DBN.indexOf("/")); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
     res.render("ajout", {DBN, _livre_});
-  })
-/*
-  ,---------------------+---------------------¬
-  |  /\ OVER HERE: DONE | \/ UNDER HERE: TODO |
-  `---------------------+---------------------´
-*/
-  .post("/src/mod/db/*/add", async (req, res) => { // Ajout de l'instance dans la DB <any>
-    var { DBS, DBNS } = get_databases(); // Get databases info
-    const DBN = req.originalUrl.slice(12, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
-    if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
-    req.body.editeurs = req.body.editeurs.split(", ");
-    req.body.auteurs = req.body.auteurs.split(", ");
-    req.body.sujets = req.body.sujets.split(", ");
-    req.body.series = req.body.series.split(", ");
-    // TODO //
-    // Ajouter le code pour que il y ait ici une variable
-    // pour le prêt & una autre pour les réservations
-    DBS[DBNS.indexOf(`${DBN}.txt`)] = insert(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)], req); // Inserts the new instance into the DB variable
-    write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2));  // Update the .txt DB
-    try {
-      if (req.query.loop == "true") {res.redirect(req.originalUrl); // Goes back to the input page
-      } else {throw Error}} catch {res.redirect(`/src/db/${DBN}`)}; // Va à l'acceuil de la DB
-  })
-  .get("/src/mod/db/*/add-by-ISBN", async (req, res) => { // Get ISBN pour une instance à mettre dans la DB <any>
+  }).get("/src/mod/db/*/add-by-ISBN", async (req, res) => { // Get ISBN pour une instance à mettre dans la DB <any>
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-12).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {erreur404(res);}; // Refuse la connection s'il manque des droits
     res.render("search_ISBN", {DBN});
-  })
-  .post("/src/mod/db/*/add-by-ISBN", async (req, res) => { // Vrai ajout de l'instance par ISBN dans la DB <any>
+  }).post("/src/mod/db/*/add-by-ISBN", async (req, res) => { // Vrai ajout de l'instance par ISBN dans la DB <any>
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-12).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {erreur404(res);}; // Refuse la connection s'il manque des droits
     const ISBN = req.body.ISBN;
@@ -119,14 +100,41 @@ router // Table de routage //
     const infos = r_infos["GB_&_OL"];
     res.render("ajout_ISBN", { DBN, infos, _livre_ })
   })
-  .get("/src/db/*/users/new", async (req, res) => { // Pour créer un user
+  /*
+  ,---------------------+---------------------¬
+  |  /\ OVER HERE: DONE | \/ UNDER HERE: TODO |
+  `---------------------+---------------------´
+*/
+  .post("/src/mod/db/*/add", async (req, res) => { // Ajout de l'instance dans la DB <any>
     var { DBS, DBNS } = get_databases(); // Get databases info
-    const DBN = req.originalUrl.slice(8, req.originalUrl.length-10).replace("/", ""); // Get the DB's name
-    if (!db_exists(DBN).is_db || !can_admin(get_token(req))) {erreur404(res);}; // Refuse la connection s'il manque des droits
-    
+    const DBN = req.originalUrl.slice(12, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
+    if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
+    req.body.editeurs = req.body.editeurs.split(", "); req.body.auteurs = req.body.auteurs.split(", ");
+    req.body.sujets = req.body.sujets.split(", "); req.body.series = req.body.series.split(", ");
+    req.body.pret = ""; req.body.reservations = [];
+    DBS[DBNS.indexOf(`${DBN}.txt`)] = insert(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)], req); // Inserts the new instance into the DB variable
+    write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2));  // Update the .txt DB
+    try { if (req.query.loop == "true") {res.redirect(req.originalUrl); // Goes back to the input page
+    } else {throw Error} } catch {res.redirect(`/src/db/${DBN}`)}; // Va à l'acceuil de la DB
   })
-  .post("/src/db/*/users/new", async (req, res) => { // Création d'un user
-
+  .get("/src/users/db/*/new", async (req, res) => { // Pour créer un user
+    var { DBS, DBNS } = get_databases(); // Get databases info
+    const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
+    const is_adm = can_admin(get_token(req));
+    if (!db_exists(DBN).is_db) {return erreur404(res);}; // Refuse la connection s'il manque des droits
+    res.render("new_user", { DBN, is_adm});
+  })
+  .post("/src/users/db/*/new", async (req, res) => { // Création d'un user
+    const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
+    if (!db_exists(DBN).is_db) {return erreur404(res);}; // Refuse la connection s'il manque des droits
+    var users = get_users(DBN);
+    if (req.body.rights == undefined) {req.body.rights=1};
+    var user = {
+      username: req.body.username,
+      password: hash(req.body.pwd1),
+      rights: req.body.rights
+    };
+    res.send(user); // TODO // Save user <any>
   })
 
 router.get("/*",async(req,res)=>{erreur404(res)}); // Erreur 404 (n'importe quelle autre page)

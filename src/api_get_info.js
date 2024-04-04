@@ -16,6 +16,7 @@ const _livre_ = {
     description: undefined, langue: undefined, ISBN10: undefined,
     ISBN13: undefined, nPages: undefined, format: undefined,
     series: undefined, sujets: undefined, image: undefined,
+    pret: undefined, reservations: undefined
 };
 
 // Fonctions
