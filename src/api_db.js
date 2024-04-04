@@ -5,14 +5,9 @@ const { randomUUID } = require("crypto");
 function get_data_from(path) {const data = fs.readFileSync(path).toString();return data;};
 function write_into(path, data) {
     fs.writeFile(path, data, { encoding: 'utf8' }, (err) => {
-        if (err) {
-            console.error('Une erreur est survenue lors de l\'écriture dans le fichier :', err);
-        } else {
-            console.log('Les données ont été écrites dans le fichier avec succès.');
-        }
-    });
-};
-function get_dir(path) {return fs.readdirSync(path)};
+        if (err) {console.error('Une erreur est survenue lors de l\'écriture dans le fichier :', err);}
+        else {console.log('Les données ont été écrites dans le fichier avec succès.');}});
+}; function get_dir(path) {return fs.readdirSync(path)};
 function get_len_dir(path) {return get_dir(path).length-1};
 function new_id(DB) {var id;do{id=randomUUID()}while(id in Object.keys(DB.books));return id};
 function get_rights(req) {

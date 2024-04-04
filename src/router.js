@@ -36,7 +36,7 @@ router // Table de routage //
     var DB = {users: {[infos.DB_root]: [infos.pwd1, 9]},books: {}};
     if (DBNS.includes(`${infos.DB_name}.txt`)||infos.DB_name=="_"){res.send(`DB <${infos.DB_name}> already exists !`)} else {
     creer_db(`${db_dir}/${infos.DB_name}.txt`, JSON.stringify(DB, null, 2), infos.DB_name);
-    res.send(`The DB ${req.body.DB_NAME} has been created <a href="/src/db/${req.body.DB_name}">HERE</a>.`)};
+    res.send(`The DB ${req.body.DB_name} has been created <a href="/src/db/${req.body.DB_name}">HERE</a>.`)};
   }).get("/bot/db/*", async (req, res) => { // Donne les ID's des documents de la DB <any>
     var { DBS, DBNS } = get_databases(); // Get databases info
     const req_db = req.originalUrl.slice(8).replace("/", ""); // Get sollicited DB's name
@@ -118,6 +118,15 @@ router // Table de routage //
     r_infos["GB_&_OL"] = await compare_info(r_infos.google_books, r_infos.openlibrary);
     const infos = r_infos["GB_&_OL"];
     res.render("ajout_ISBN", { DBN, infos, _livre_ })
+  })
+  .get("/src/db/*/users/new", async (req, res) => { // Pour créer un user
+    var { DBS, DBNS } = get_databases(); // Get databases info
+    const DBN = req.originalUrl.slice(8, req.originalUrl.length-10).replace("/", ""); // Get the DB's name
+    if (!db_exists(DBN).is_db || !can_admin(get_token(req))) {erreur404(res);}; // Refuse la connection s'il manque des droits
+    
+  })
+  .post("/src/db/*/users/new", async (req, res) => { // Création d'un user
+
   })
 
 router.get("/*",async(req,res)=>{erreur404(res)}); // Erreur 404 (n'importe quelle autre page)
