@@ -13,14 +13,12 @@
         function check_pass() {
             const pwd1 = document.getElementById('pwd1').value;
             if (pwd1 == document.getElementById('pwd2').value && pwd1 != "") {
-                document.getElementById('submit').disabled = false;
-            } else {
-                document.getElementById('submit').disabled = true;
-            }
-        }
+                document.getElementById('submit').disabled = false;}
+            else {document.getElementById('submit').disabled = true};};
     </script>
     Ceci est la page pour créer un user pour la DB <<%= DBN %>>.<br><br>
-    <form method="post" action="/src/users/db/<%= DBN %>/new"><h4>Infos du user:</h4>
+    <form method="post" action="/src/users/db/<%= DBN %>/new">
+        <h4>Infos du user:</h4>
         Username: <input type="text" name="username" value="root" required><br>
         <% if (is_adm) { %>Rights: <input type="text" value="1" placeholder="1-5" name="rights" value="root" required><br>
         <% } else { %>Rights: 1 (user lambda)<br><% } %>

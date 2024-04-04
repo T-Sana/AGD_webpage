@@ -1,5 +1,5 @@
 // Requires //
-const { get_databases, creer_db, insert, write_into, db_dir } = require("./api_db.js");
+const { get_databases, creer_db, insert, insert_user, write_into, db_dir } = require("./api_db.js");
 const { request_API, APIS, compare_info, _livre_ } = require("./api_get_info.js");
 const { get_rights, log_in, is_logged } = require("./auth.js");
 const { hash, hashy } = require("./hash.js");
@@ -15,7 +15,7 @@ function get_books(database) {
   return DBS[DBNS.indexOf(`${database}.txt`)].books
 };function get_users(database) {
   var { DBS, DBNS } = get_databases(); // Get databases info
-  return DBS[DBNS.indexOf(`${database}.txt`)].usersget_users
+  return DBS[DBNS.indexOf(`${database}.txt`)].users
 };function db_exists(DB_NAME) {
   var { DBS, DBNS } = get_databases(); // Get databases info
   var num=-1; var is_db=false;
@@ -32,9 +32,7 @@ function get_books(database) {
 router // Table de routage //
   .get("/", (req, res) => {res.redirect("/src");}) // Racine redirigeant vers l'acceuil du site
   .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/")}) // Removes token
-  .get("/src",async (req, res) => {var { DBS, DBNS } = get_databases(); // Acceuil du site
-    res.render("acceuil", { DBS, DBNS });
-  }).get("/src/new/db", async (req, res) => {res.render("new_db")}) // To create a new DB
+  .get("/src/new/db", async (req, res) => {res.render("new_db")}) // To create a new DB
   .post("/src/new/db", async (req, res) => { // Creates a new DB
     var { DBS, DBNS } = get_databases(); // Get databases info
     var infos = req.body;infos.pwd1 = hash(infos.pwd1);
@@ -42,6 +40,8 @@ router // Table de routage //
     if (DBNS.includes(`${infos.DB_name}.txt`)||infos.DB_name=="_"){res.send(`DB <${infos.DB_name}> already exists !`)} else {
     creer_db(`${db_dir}/${infos.DB_name}.txt`, JSON.stringify(DB, null, 2), infos.DB_name);
     res.send(`The DB ${req.body.DB_name} has been created <a href="/src/db/${req.body.DB_name}">HERE</a>.`)};
+  }).get("/src",async (req, res) => {var { DBS, DBNS } = get_databases(); // Acceuil du site
+    res.render("acceuil", { DBS, DBNS });
   }).get("/bot/db/*", async (req, res) => { // Donne les ID's des documents de la DB <any>
     var { DBS, DBNS } = get_databases(); // Get databases info
     const req_db = req.originalUrl.slice(8).replace("/", ""); // Get sollicited DB's name
@@ -99,13 +99,12 @@ router // Table de routage //
     r_infos["GB_&_OL"] = await compare_info(r_infos.google_books, r_infos.openlibrary);
     const infos = r_infos["GB_&_OL"];
     res.render("ajout_ISBN", { DBN, infos, _livre_ })
-  })
-  /*
-  ,---------------------+---------------------¬
-  |  /\ OVER HERE: DONE | \/ UNDER HERE: TODO |
-  `---------------------+---------------------´
-*/
-  .post("/src/mod/db/*/add", async (req, res) => { // Ajout de l'instance dans la DB <any>
+  }).get("/src/users/db/*/new", async (req, res) => { // Pour créer un user
+    const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
+    if (!db_exists(DBN).is_db) {return erreur404(res);}; // Refuse la connection s'il manque des droits
+    const is_adm = can_admin(get_token(req));
+    res.render("new_user", { DBN, is_adm});
+  }).post("/src/mod/db/*/add", async (req, res) => { // Ajout de l'instance dans la DB <any> // TODOVER
     var { DBS, DBNS } = get_databases(); // Get databases info
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
@@ -113,29 +112,25 @@ router // Table de routage //
     req.body.sujets = req.body.sujets.split(", "); req.body.series = req.body.series.split(", ");
     req.body.pret = ""; req.body.reservations = [];
     DBS[DBNS.indexOf(`${DBN}.txt`)] = insert(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)], req); // Inserts the new instance into the DB variable
-    write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2));  // Update the .txt DB
+    write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2)); // Update the .txt DB
     try { if (req.query.loop == "true") {res.redirect(req.originalUrl); // Goes back to the input page
     } else {throw Error} } catch {res.redirect(`/src/db/${DBN}`)}; // Va à l'acceuil de la DB
-  })
-  .get("/src/users/db/*/new", async (req, res) => { // Pour créer un user
-    var { DBS, DBNS } = get_databases(); // Get databases info
+  }).post("/src/users/db/*/new", async (req, res) => { // Création d'un user
     const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
-    const is_adm = can_admin(get_token(req));
-    if (!db_exists(DBN).is_db) {return erreur404(res);}; // Refuse la connection s'il manque des droits
-    res.render("new_user", { DBN, is_adm});
-  })
-  .post("/src/users/db/*/new", async (req, res) => { // Création d'un user
-    const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
-    if (!db_exists(DBN).is_db) {return erreur404(res);}; // Refuse la connection s'il manque des droits
-    var users = get_users(DBN);
+    if (!db_exists(DBN).is_db) {return erreur404(res)}; // Refuse la connection s'il manque des droits
+    var users = get_users(DBN); var { DBS, DBNS } = get_databases(); // Get databases info
     if (req.body.rights == undefined) {req.body.rights=1};
-    var user = {
-      username: req.body.username,
-      password: hash(req.body.pwd1),
-      rights: req.body.rights
-    };
-    res.send(user); // TODO // Save user <any>
+    var user = {username: req.body.username, password: hash(req.body.pwd1), rights: req.body.rights};
+    if (Object.keys(users).includes(user.username)) {res.send(`User named <${user.username}> already exists!`)}
+    else { var DB = DBS[DBNS.indexOf(`${DBN}.txt`)]; DB = insert_user(user, DB, req);
+      write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DB, null, 2)); // Update the .txt DB)
+    }; res.send(`Successfully created user <${user.username}>.\nRevenir <a href="/src/db/${DBN}">à l'acceuil</a>`)
   })
+  /*
+  ,---------------------+---------------------¬
+  |  /\ OVER HERE: DONE | \/ UNDER HERE: TODO |
+  `---------------------+---------------------´
+*/
 
 router.get("/*",async(req,res)=>{erreur404(res)}); // Erreur 404 (n'importe quelle autre page)
 module.exports = { router }; // Exportation pour que app.js puisse le récup
