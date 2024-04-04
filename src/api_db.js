@@ -15,15 +15,15 @@ function write_into(path, data) {
 function get_dir(path) {return fs.readdirSync(path)};
 function get_len_dir(path) {return get_dir(path).length-1};
 function new_id(DB) {var id;do{id=randomUUID()}while(id in Object.keys(DB.books));return id};
-function insert(instance, DB) {console.log(instance);DB.books[new_id(DB)] = instance;return DB};
 function get_rights(req) {
     try{return jwt.verify(req.cookies.token,process.env.SECRET_KEY).rights}
     catch { return 0 };
-}; function ajouter(instance, db, req) {
+}; function insert(instance, db, req) {
     if (!get_rights(req) in [4, 9]) {return}
-    else {var id;do {id = new_id();}
-        while (id in db.books);
+    else {var id; do {id = new_id(db)} while (id in Object.keys(db.books));
+        instance.id = id;
         db.books[id] = instance;};
+    return db
 }; function creer_db(path, data, name="any") {
     fs.writeFile(path, data, (err) => {
         if (err) throw err;
@@ -50,4 +50,4 @@ function get_databases() {
 
 get_databases()
 
-module.exports = { get_databases, insert, get_rights, write_into, db_dir, creer_db, ajouter };
+module.exports = { get_databases, insert, get_rights, write_into, db_dir, creer_db };

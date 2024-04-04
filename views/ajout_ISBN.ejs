@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style.css" />
-    <title>AGD | <%= DBN %> Ajout</title>
+    <title>AGD | <%= DBN %> Ajout ISBN</title>
 </head>
 <body>
-    Ceci est la page d'ajout à la DB <i><%= DBN %></i>.<br><br>
+    Ceci est la page d'ajout par ISBN à la DB <i><%= DBN %></i>.<br><br>
     <form method="post", action="/src/mod/db/<%= DBN %>/add">
         <% Object.keys(_livre_).forEach((key) => { %>
-            <%= key %>: <input type="text" name="<%= key %>"><br>
+            <% console.log(infos) %>
+            <%= key %>: <input type="text" value="<%= infos[key] %>" name="<%= key %>"><br>
         <% }) %>
         <input type="submit" value="Confirmer">
     </form><br>

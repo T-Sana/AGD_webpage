@@ -96,9 +96,11 @@ router // Table de routage //
     req.body.auteurs = req.body.auteurs.split(", ");
     req.body.sujets = req.body.sujets.split(", ");
     req.body.series = req.body.series.split(", ");
-    DBS[DBNS.indexOf(`${DBN}.txt`)] = insert(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)]); // Insert the new instance into the DB variable
+    // TODO //
+    // Ajouter le code pour que il y ait ici une variable
+    // pour le prêt & una autre pour les réservations
+    DBS[DBNS.indexOf(`${DBN}.txt`)] = insert(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)], req); // Inserts the new instance into the DB variable
     write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2));  // Update the .txt DB
-    console.log(req.query.loop)
     try {
       if (req.query.loop == "true") {res.redirect(req.originalUrl); // Goes back to the input page
       } else {throw Error}} catch {res.redirect(`/src/db/${DBN}`)}; // Va à l'acceuil de la DB
@@ -106,16 +108,17 @@ router // Table de routage //
   .get("/src/mod/db/*/add-by-ISBN", async (req, res) => { // Get ISBN pour une instance à mettre dans la DB <any>
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-12).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {erreur404(res);}; // Refuse la connection s'il manque des droits
-    res.render("ajoutISBN", {DBN});
+    res.render("search_ISBN", {DBN});
   })
   .post("/src/mod/db/*/add-by-ISBN", async (req, res) => { // Vrai ajout de l'instance par ISBN dans la DB <any>
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-12).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {erreur404(res);}; // Refuse la connection s'il manque des droits
     const ISBN = req.body.ISBN;
-    var infos = {google_books: await request_API(ISBN, APIS[0]), openlibrary: await request_API(ISBN, APIS[1])}
-    infos["GB_&_OL"] = await compare_info(infos.google_books, infos.openlibrary);
-    res.send(infos); // Doit inserer les infos dans la DB <any> et non pas les envoyer en JSON à l'user
-  }) // Doit redirect vers un formulaire avec en placholders les infos récupérées // TODO
+    var r_infos = {google_books: await request_API(ISBN, APIS[0]), openlibrary: await request_API(ISBN, APIS[1])}
+    r_infos["GB_&_OL"] = await compare_info(r_infos.google_books, r_infos.openlibrary);
+    const infos = r_infos["GB_&_OL"];
+    res.render("ajout_ISBN", { DBN, infos, _livre_ })
+  })
 
 router.get("/*",async(req,res)=>{erreur404(res)}); // Erreur 404 (n'importe quelle autre page)
 module.exports = { router }; // Exportation pour que app.js puisse le récup

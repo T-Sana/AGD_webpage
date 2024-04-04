@@ -14,9 +14,11 @@
             <th>Titre</th>
             <th>Auteurs</th>
             <th>Langue</th>
+            <th>Éditeur</th>
             <th>ISBN10</th>
             <th>ISBN13</th>
             <th>État</th>
+            <th>ID</th>
         </tr>
         <% const keys = Object.keys(docs) %>
         <% keys.forEach( (key) => { %>
@@ -25,9 +27,11 @@
                 <td> <%= doc.titre %> </td>
                 <td> <%= doc.auteurs %> </td>
                 <td> <%= doc.langue %> </td>
+                <td> <%= doc.editeur %> </td>
                 <td> <%= doc.ISBN10 %> </td>
                 <td> <%= doc.ISBN13 %> </td>
                 <td> État à définir</td>
+                <td> <%= doc.id %> </td>
             </tr>
         <% }) %>
     </table>
