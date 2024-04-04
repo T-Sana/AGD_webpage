@@ -30,3 +30,7 @@ T_Sana {
 body {
   font-family: 'Courier New', Courier, monospace;
 }
+
+table, td, tr, th {
+  border: 1px solid;
+}

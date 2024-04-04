@@ -5,14 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="/style.css" />
     <title>AGD | Visu instance <%= doc.id %> </title>
 </head>
 <body>
     <table>
         <tr>
-            <th rowspan="12"><img src="<%= doc.img %>" alt="Image non disponible" srcset=""></th>
+            <th rowspan="13"><img src="<%= doc.image %>" alt="Image non disponible" srcset=""></th>
+            <th><% const titrec = [doc.titre, doc.soustitre] %><%= titrec.join(", ") %></th>
         </tr>
+        <tr><td>Auteurs: <%= doc.auteurs.join(", ") %></td></tr>
+        <tr><td>Édition: <%= doc.edition %></td></tr>
+        <tr><td>Éditeur: <%= doc.editeurs.join(", ") %></td></tr>
+        <tr><td>Langue: <%= doc.langue %></td></tr>
+        <tr><td>ISBN10: <%= doc.ISBN10 %></td></tr>
+        <tr><td>ISBN13: <%= doc.ISBN13 %></td></tr>
+        <tr><td>Pages: <%= doc.nPages %></td></tr>
+        <tr><td>Date: <%= doc.releaseDate %></td></tr>
+        <tr><td>Séries: <%= doc.series.join(", ") %></td></tr>
+        <tr><td>Format: <%= doc.format %></td></tr>
+        <tr><td>Sujets: <%= doc.sujets.join(", ") %></td></tr>
+        <tr><td>ID : <%"<"%><%= doc.id %><%">"%></td></tr>
     </table>
 </body>
 </html>

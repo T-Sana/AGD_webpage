@@ -10,8 +10,10 @@ const router = express.Router();
 
 // Fonctions //
 function erreur404(res) {return res.render("404")};
-function get_books(database) {return DBS[DBNS.indexOf(`${database}.txt`)].books};
-function db_exists(DB_NAME) {
+function get_books(database) {
+  var { DBS, DBNS } = get_databases(); // Get databases info
+  return DBS[DBNS.indexOf(`${database}.txt`)].books
+};function db_exists(DB_NAME) {
   var { DBS, DBNS } = get_databases(); // Get databases info
   var num=-1; var is_db=false;
   for (let i=0; i<DBNS.length; i++) { if (DBNS[i] == `${DB_NAME}.txt`)
@@ -26,10 +28,8 @@ router // Table de routage //
   .get("/", (req, res) => {res.redirect("/src");}) // Racine redirigeant vers l'acceuil du site
   .get("/rm", async (req, res) => {res.clearCookie('token').redirect("/")}) // Removes token
   .get("/src",async (req, res) => {var { DBS, DBNS } = get_databases(); // Acceuil du site
-  console.log(DBNS)  
-  res.render("acceuil", { DBS, DBNS });
-  })
-  .get("/src/new/db", async (req, res) => {res.render("new_db")}) // Create a new DB
+    res.render("acceuil", { DBS, DBNS });
+  }).get("/src/new/db", async (req, res) => {res.render("new_db")}) // Create a new DB
   .post("/src/new/db", async (req, res) => {
     var { DBS, DBNS } = get_databases(); // Get databases info
     var infos = req.body;infos.pwd1 = hash(infos.pwd1);
@@ -65,18 +65,19 @@ router // Table de routage //
     const req_db = req.originalUrl.slice(10).replace("/", "");
     if (!db_exists(req_db).is_db) {erreur404(res);}
     else {res.render("loginDB", {req_db})};
-  }).get("/src/view/db/*/*", async (req, res) => { // Visualisation de l'instance <any> de la DB (en JSON)
-    const r = req.originalUrl.slice(13);
-    const DBN = r.split("/")[0];
-    const ID = r.split("/")[1];
-    if (!db_exists(DBN).is_db) {return erreur404(res);};
-    const data = get_books(DBN);
-    if (ID in data) {res.send(data[ID])}
+  }).get("/src/view/db/*/*", async (req, res) => { // Visualisation de l'instance <any> de la DB
+    const r = req.originalUrl.slice(13); const DBN = r.split("/")[0], ID = r.split("/")[1];
+    if (!db_exists(DBN).is_db) {return erreur404(res)};
+    const data = get_books(DBN);const doc = data[ID];
+    if (ID in data) {res.render("view_instance", { doc })}
     else {res.send(`The element with <${ID}> id doesn't exist`)};
   }).get("/src/view/db/*", async (req, res) => { // Visualisation de la DB (en JSON)
     const DBN = req.originalUrl.slice(13).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db) {erreur404(res);}
-    else {res.send(get_books(DBN))};
+    else {
+      const docs = get_books(DBN);
+      res.render("view_db_data", { docs, DBN })
+    };
   }).get("/src/mod/db/*/add", async (req, res) => { // Get infos for une instance dans la DB <any>
     var DBN = req.originalUrl.slice(12); DBN = DBN.slice(0, DBN.indexOf("/")); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits

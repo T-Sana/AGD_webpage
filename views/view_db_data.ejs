@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <title>AGD | Visu DB <%= DBN %> </title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Titre</th>
+            <th>Auteurs</th>
+            <th>Langue</th>
+            <th>ISBN10</th>
+            <th>ISBN13</th>
+            <th>État</th>
+        </tr>
+        <% const keys = Object.keys(docs) %>
+        <% keys.forEach( (key) => { %>
+            <% let doc = docs[key]; %>
+            <tr>
+                <td> <%= doc.titre %> </td>
+                <td> <%= doc.auteurs %> </td>
+                <td> <%= doc.langue %> </td>
+                <td> <%= doc.ISBN10 %> </td>
+                <td> <%= doc.ISBN13 %> </td>
+                <td> État à définir</td>
+            </tr>
+        <% }) %>
+    </table>
+</body>
+</html>
