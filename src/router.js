@@ -24,9 +24,9 @@ function get_books(database) {
 };function get_token(req) { // Get the token info
   try{return jwt.verify(req.cookies.token, process.env.SECRET_KEY) } catch {};
 };function can_write(token) {
-  var wr = false;[4,5,9].some((value) => {if (token.rights == value) {wr=true}});return wr;
+  var wr=false;try{[4,5,9].some((value)=>{if(token.rights==value){wr=true}})}catch{};return wr;
 };function can_admin(token) {
-  var wr = false;[8,9].some((value) => {if (token.rights == value) {wr=true}});return wr;
+  var wr=false;try{[8,9].some((value)=>{if(token.rights==value){wr=true}})}catch{};return wr;
 };
 
 router // Table de routage //
@@ -99,11 +99,26 @@ router // Table de routage //
     r_infos["GB_&_OL"] = await compare_info(r_infos.google_books, r_infos.openlibrary);
     const infos = r_infos["GB_&_OL"];
     res.render("ajout_ISBN", { DBN, infos, _livre_ })
+  }).get("/src/view/users/db/*", async (req, res) => { // Pour créer un user
+    const DBN = req.originalUrl.slice(19).replace("/", ""); // Get the DB's name
+    if (!db_exists(DBN).is_db) {return erreur404(res);}; // Refuse la connection s'il manque des droits
+    res.send("Here will be the list of the users");
   }).get("/src/users/db/*/new", async (req, res) => { // Pour créer un user
     const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
     if (!db_exists(DBN).is_db) {return erreur404(res);}; // Refuse la connection s'il manque des droits
-    const is_adm = can_admin(get_token(req));
+    var is_adm; try {is_adm = can_admin(get_token(req))} catch {is_adm = false};
     res.render("new_user", { DBN, is_adm});
+  }).post("/src/users/db/*/new", async (req, res) => { // Création d'un user
+    const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
+    if (req.body.rights == undefined) {req.body.rights=1};
+    if (!db_exists(DBN).is_db || !(can_admin(get_token(req)) || req.body.rights == 1))
+    {return erreur404(res)}; // Refuse la connection s'il manque des droits
+    var users = get_users(DBN); var { DBS, DBNS } = get_databases(); // Get databases info
+    var user = {username: req.body.username, password: hash(req.body.pwd1), rights: req.body.rights};
+    if (Object.keys(users).includes(user.username)) {res.send(`User named <${user.username}> already exists!`)}
+    else { var DB = DBS[DBNS.indexOf(`${DBN}.txt`)]; DB = insert_user(user, DB, req);
+      write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DB, null, 2)); // Update the .txt DB)
+    }; res.send(`Successfully created user <${user.username}>.\nRevenir <a href="/src/db/${DBN}">à l'acceuil</a>`)
   }).post("/src/mod/db/*/add", async (req, res) => { // Ajout de l'instance dans la DB <any> // TODOVER
     var { DBS, DBNS } = get_databases(); // Get databases info
     const DBN = req.originalUrl.slice(12, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
@@ -115,16 +130,6 @@ router // Table de routage //
     write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2)); // Update the .txt DB
     try { if (req.query.loop == "true") {res.redirect(req.originalUrl); // Goes back to the input page
     } else {throw Error} } catch {res.redirect(`/src/db/${DBN}`)}; // Va à l'acceuil de la DB
-  }).post("/src/users/db/*/new", async (req, res) => { // Création d'un user
-    const DBN = req.originalUrl.slice(14, req.originalUrl.length-4).replace("/", ""); // Get the DB's name
-    if (!db_exists(DBN).is_db) {return erreur404(res)}; // Refuse la connection s'il manque des droits
-    var users = get_users(DBN); var { DBS, DBNS } = get_databases(); // Get databases info
-    if (req.body.rights == undefined) {req.body.rights=1};
-    var user = {username: req.body.username, password: hash(req.body.pwd1), rights: req.body.rights};
-    if (Object.keys(users).includes(user.username)) {res.send(`User named <${user.username}> already exists!`)}
-    else { var DB = DBS[DBNS.indexOf(`${DBN}.txt`)]; DB = insert_user(user, DB, req);
-      write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DB, null, 2)); // Update the .txt DB)
-    }; res.send(`Successfully created user <${user.username}>.\nRevenir <a href="/src/db/${DBN}">à l'acceuil</a>`)
   })
   /*
   ,---------------------+---------------------¬
