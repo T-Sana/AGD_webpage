@@ -13,6 +13,9 @@ function new_id(DB) {var id;do{id=randomUUID()}while(id in Object.keys(DB.books)
 function get_rights(req) {
     try{return jwt.verify(req.cookies.token,process.env.SECRET_KEY).rights}
     catch { return 0 };
+}; function modifier(instance, db, req) {
+    if (get_rights(req) in [4, 5, 9]) {db.books[instance.id] = instance};
+    return db
 }; function insert(instance, db, req) {
     if (get_rights(req) in [4, 5, 9]) {var id; do {id = new_id(db)} while (id in Object.keys(db.books));
         instance.id = id; db.books[id] = instance};
@@ -45,4 +48,4 @@ function get_databases() {
 
 get_databases()
 
-module.exports = { get_databases, insert, insert_user, get_rights, write_into, db_dir, creer_db };
+module.exports = { get_databases, insert, insert_user, get_rights, write_into, db_dir, creer_db, modifier };

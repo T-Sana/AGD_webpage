@@ -6,7 +6,7 @@
 - [ ] Système d'instances
   - [x] Créer instance
   - [x] View instance
-  - [ ] Modifier instance
+  - [x] Modifier instance
   - [ ] Supprimer instance
   - [x] View instances
   - [x] Get IDs (for bots or whatelse)

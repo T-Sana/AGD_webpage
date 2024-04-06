@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <title>AGD | Modif instance </title>
+</head>
+<script>
+    function update_img() {
+        const URL = document.getElementById("url_img").value;
+        document.getElementById("img_livre").setAttribute("src", URL);
+    }
+</script>
+<body>
+    <form action="/src/mod/db/<%= DBN %>/<%= doc.id %>/mod" method="post">
+    <table>
+        <tr>
+            <th rowspan="13">
+                URL Image:<br><input name="image" id="url_img" size="80" type="text" value="<%= doc.image %>" onkeyup="update_img()"><br>
+                <img id="img_livre" src="<%= doc.image %>" alt="Image non disponible" srcset="">
+            </th>
+            <th>
+                <input type="text" name="titre_soustitre"
+                value='<% if (doc.soustitre!="") {const titrec = [doc.titre, doc.soustitre]; %> <%= titrec.join(", ") %> <%} else { %> <%= doc.titre %> <% } %>'
+                size="50">
+            </th>
+        </tr>
+        <tr><td>Auteurs: <input type="text" name="auteurs"  value='<%= doc.auteurs.join(", ") %>'   size="40"  ></td></tr>
+        <tr><td>Édition: <input type="text" name="edition"  value="<%= doc.edition %>"                         ></td></tr>
+        <tr><td>Éditeur: <input type="text" name="editeur"  value='<%= doc.editeurs.join(", ") %>'             ></td></tr>
+        <tr><td>Langue:  <input type="text" name="langue"   value="<%= doc.langue %>"                          ></td></tr>
+        <tr><td>ISBN10:  <input type="text" name="ISBN10"   value="<%= doc.ISBN10 %>"               size="10"  ></td></tr>
+        <tr><td>ISBN13:  <input type="text" name="ISBN13"   value="<%= doc.ISBN13 %>"               size="13"  ></td></tr>
+        <tr><td>Pages:   <input type="text" name="n_pags"   value="<%= doc.nPages %>"               size="4"   ></td></tr>
+        <tr><td>Date:    <input type="text" name="date"     value="<%= doc.releaseDate %>"                     ></td></tr>
+        <tr><td>Séries:  <input type="text" name="series"   value='<%= doc.series.join(", ") %>'               ></td></tr>
+        <tr><td>Format:  <input type="text" name="format"   value="<%= doc.format %>"                          ></td></tr>
+        <tr><td>Sujets:  <input type="text" name="sujets"   value='<%= doc.sujets.join(", ") %>'    size="40"  ></td></tr>
+        <tr><td>ID : <%="<"%><%= doc.id %><%=">"%></td></tr>
+    </table><br>
+    <button type="submit">Confirmer</button>
+    <button type="reset">Reset</button>
+    <a href="/src/view/db/<%= DBN %>/<%= doc.id %>"><button>Annuler</button></a>
+</form>
+</body>
+</html>

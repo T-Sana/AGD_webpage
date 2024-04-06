@@ -1,5 +1,5 @@
 // Requires //
-const { get_databases, creer_db, insert, insert_user, write_into, db_dir } = require("./api_db.js");
+const { get_databases, creer_db, insert, insert_user, write_into, db_dir, modifier } = require("./api_db.js");
 const { request_API, APIS, compare_info, _livre_ } = require("./api_get_info.js");
 const { get_rights, log_in, is_logged } = require("./auth.js");
 const { hash, hashy } = require("./hash.js");
@@ -88,7 +88,7 @@ router // Table de routage //
     const r = req.originalUrl.slice(13); const DBN = r.split("/")[0], ID = r.split("/")[1];
     if (!db_exists(DBN).is_db) {return erreur404(res)};
     const data = get_books(DBN);const doc = data[ID];
-    if (ID in data) {res.render("view_instance", { doc })}
+    if (ID in data) {res.render("instance_view", { doc, DBN })}
     else {res.send(`The element with <${ID}> id doesn't exist`)};
 }).get("/src/view/db/*",              async (req, res) => { // Visualisation de la DB
     const DBN = req.originalUrl.slice(13).replace("/", ""); // Get the DB's name
@@ -97,6 +97,21 @@ router // Table de routage //
       const docs = get_books(DBN);
       res.render("view_db_data", { docs, DBN })
     };
+}).get("/src/mod/db/*/*/mod",         async (req, res) => { // Pour modifier l'instance <any> de la DB
+    const r = req.originalUrl.slice(12); const DBN = r.split("/")[0], ID = r.split("/")[1];
+    if (!db_exists(DBN).is_db) {return erreur404(res)};
+    const data = get_books(DBN);const doc = data[ID];
+    if (ID in data) {res.render("instance_modif", { doc, DBN })}
+    else {res.send(`The element with <${ID}> id doesn't exist`)};
+}).post("/src/mod/db/*/*/mod",        async (req, res) => { // Modification de l'instance <any> de la DB
+  const r = req.originalUrl.slice(12); const DBN = r.split("/")[0], ID = r.split("/")[1];
+  req.body.titre  = req.body.titre_soustitre.split(", ")[0];
+  req.body.soustitre = req.body.titre_soustitre.split(", ")[1] || "";
+  delete req.body.titre_soustitre;req.body.id = ID;
+  var { DBS, DBNS } = get_databases(); // Get databases info
+  DBS[DBNS.indexOf(`${DBN}.txt`)] = modifier(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)], req);
+  write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2))
+  res.send(DBS[DBNS.indexOf(`${DBN}.txt`)])
 }).get("/src/mod/db/*/add",           async (req, res) => { // Get infos pour ajouter une instance dans la DB <any>
     var DBN = req.originalUrl.slice(12); DBN = DBN.slice(0, DBN.indexOf("/")); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits
@@ -124,7 +139,7 @@ router // Table de routage //
       Object.keys(usrs).forEach( (key) => {usrs[key][0] = hashy(usrs[key][0]).slice(0,20)});
       res.render("users_list", { usrs, DBN });
     };
-}).get("/src/view/user/*/db/*",        async (req, res) => { // Pour voir les users de la DB <any>  
+}).get("/src/view/user/*/db/*",       async (req, res) => { // Pour voir les users de la DB <any>  
   const UN =  req.originalUrl.slice(15).split("/")[0]
   const DBN = req.originalUrl.slice(19+UN.length).replace("/", ""); // Get the DB's name
   if (!db_exists(DBN).is_db) {return erreur404(res);} // Refuse la connection s'il manque des droits

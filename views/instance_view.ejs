@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style.css" />
-    <title>AGD | Visu instance <%= doc.id %> </title>
+    <title>AGD | Visu instance </title>
 </head>
 <body>
     <table>
@@ -27,5 +27,8 @@
         <tr><td>Sujets: <%= doc.sujets.join(", ") %></td></tr>
         <tr><td>ID : <%"<"%><%= doc.id %><%">"%></td></tr>
     </table>
+    <a href="/src/mod/db/<%= DBN %>/<%= doc.id %>/mod"><button>Modifier</button></a><br>
+    <a><button>Supprimer</button></a><br>
+    <a><button>Prêter</button></a><br>
 </body>
 </html>
