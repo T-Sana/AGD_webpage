@@ -34,3 +34,11 @@ body {
 table, td, tr, th {
   border: 1px solid;
 }
+
+.inpoute:valid {
+  background-color: palegreen;
+}
+
+.inpoute:invalid {
+  background-color: lightpink;
+}

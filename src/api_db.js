@@ -18,8 +18,7 @@ function get_rights(req) {
         instance.id = id; db.books[id] = instance};
     return db
 }; function insert_user(user, db, req) {
-    if (get_rights(req) in [8, 9]) {db.users[user.username] = [user.password, user.rights]};
-    return db
+    if (get_rights(req) in [8, 9]) {db.users[user.username] = [user.password, user.rights, new Date().toLocaleString()]};return db
 }; function creer_db(path, data, name="any") {
     fs.writeFile(path, data, (err) => {
         if (err) throw err;

@@ -13,17 +13,18 @@
         function check_pass() {
             const pwd1 = document.getElementById('pwd1').value;
             if (pwd1 == document.getElementById('pwd2').value && pwd1 != "") {
-                document.getElementById('submit').disabled = false;}
-            else {document.getElementById('submit').disabled = true};};
+                document.getElementById('submit').disabled = false}
+            else {document.getElementById('submit').disabled = true}};
     </script>
     Ceci est la page pour créer un user pour la DB <<%= DBN %>>.<br><br>
     <form method="post" action="/src/users/db/<%= DBN %>/new">
         <h4>Infos du user:</h4>
-        Username: <input type="text" name="username" value="root" required><br>
-        <% if (is_adm) { %>Rights: <input type="text" value="1" placeholder="1-5" name="rights" value="root" required><br>
+        Username: <input type="text" class="inpoute" name="username" minlength="2" maxlength="12"  pattern="[A-Za-z0-9·_\-]+" required>(Crs alphnum, _ & -)<br>
+        <% if (is_adm) { %>Rights: <input type="text" class="inpoute" pattern="[0-9]" maxlength="1" minlength="1" value="1" placeholder="1-5, 8-9" name="rights" value="root" required><br>
         <% } else { %>Rights: 1 (user lambda)<br><% } %>
-        Password: <input type="password" name="pwd1" id="pwd1" onkeyup='check_pass();' required><br>
-        Confirm: <input type="password" name="pwd2" id="pwd2" onkeyup='check_pass();' required><br>
+        Password: <input type="password" class="inpoute" name="pwd1" id="pwd1" onkeyup='check_pass();' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required><br>
+        Confirm:  <input type="password" class="inpoute" name="pwd2" id="pwd2" onkeyup='check_pass();' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required><br>
+        MdP: 8crs long. Crs min & MAJ + nombre.<br>
         <input type="submit" value="Confirmer" id="submit" disabled>
     </form><br>
     Retourner à l'<a href="/">acceuil</a>

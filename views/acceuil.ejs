@@ -15,8 +15,8 @@
     <ul><% for (let i=0; i< DBNS.length; i++) { %>
         <li><a href="/src/db/<%= DBNS[i].slice(0, DBNS[i].length-4) %>">DB_<%= DBNS[i].slice(0, DBNS[i].length-4) %></a></li>
     <% } %></ul>
-    To logout click <a href="/rm">HERE</a>.<br>
-    Pour créer une DB clickez <a href="/src/new/db">ICI</a>.<br>
+    <a href="/rm"><button>Logout</button></a><br>
+    <a href="/src/new/db"><button>New DB</button></a><br>
 
 </body>
 </html>

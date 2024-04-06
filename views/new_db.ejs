@@ -26,11 +26,11 @@
         Username: <input type="text"     name="username" required><br>
         Password: <input type="password" name="userpswd" required><br>
         <h4>Infos de la DB:</h4>
-        Nom de la DB: <input type="text" name="DB_name" required><br>
-        User root DB: <input type="text" name="DB_root" value="root" required><br>
-        Pswd root DB: <input type="password" name="pwd1" id="pwd1" onkeyup='check_pass();' required><br>
-        Confirm pswd: <input type="password" name="pwd2" id="pwd2" onkeyup='check_pass();' required><br>
-        
+        Nom de la DB: <input type="text"     class="inpoute" pattern="[A-Za-z0-9_·\-]+" minlength="2" maxlength="12" name="DB_name"              required>(Crs alphnum, _ & -. Max 12crs)<br>
+        User root DB: <input type="text"     class="inpoute" pattern="[A-Za-z0-9_·\-]+" minlength="2" maxlength="12" name="DB_root" value="root" required>(Crs alphnum, _ & -. Max 12crs)<br>
+        Pswd root DB: <input type="password" class="inpoute" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" name="pwd1" id="pwd1" onkeyup='check_pass();' required><br>
+        Confirm pswd: <input type="password" class="inpoute" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" name="pwd2" id="pwd2" onkeyup='check_pass();' required><br>
+        MdP: 8crs long. Crs min & MAJ + nombre.<br>
         <input type="submit" value="Confirmer" id="submit" disabled>
     </form><br>
     Retourner à l'<a href="/">acceuil</a>

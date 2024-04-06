@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <title>AGD | Visu users DB <%= DBN %> </title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Password hash</th>
+            <th>Rights</th>
+        </tr>
+        <% const keys = Object.keys(usrs) %>
+        <% keys.forEach( (key) => { %>
+            <% let usr = usrs[key]; %>
+            <tr>
+                <td> <a href="/src/view/user/<%= key %>/db/<%= DBN %>"><%= key %></a> </td>
+                <td> <%= usrs[key][0] %> </td>
+                <td> <%= usrs[key][1] %> </td>
+            </tr>
+        <% }) %>
+    </table>
+</body>
+</html>
