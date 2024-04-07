@@ -103,15 +103,23 @@ router // Table de routage //
     const data = get_books(DBN);const doc = data[ID];
     if (ID in data) {res.render("instance_modif", { doc, DBN })}
     else {res.send(`The element with <${ID}> id doesn't exist`)};
+}).get("/src/mod/db/*/*/suppr",       async (req, res) => { // Pour supprimer l'instance <any> de la DB
+    const r = req.originalUrl.slice(12); const DBN = r.split("/")[0], ID = r.split("/")[1];
+    if (!db_exists(DBN).is_db) {return erreur404(res)};
+    res.send(`Voulez-vous vraiment supprimer cette instance ?(${ID})<br><form method="POST" action"/src/mod/db/${DBN}/${ID}/suppr"`)
 }).post("/src/mod/db/*/*/mod",        async (req, res) => { // Modification de l'instance <any> de la DB
   const r = req.originalUrl.slice(12); const DBN = r.split("/")[0], ID = r.split("/")[1];
   req.body.titre  = req.body.titre_soustitre.split(", ")[0];
   req.body.soustitre = req.body.titre_soustitre.split(", ")[1] || "";
+  req.body.auteurs = req.body.auteurs.split(', ');
+  req.body.editeurs = req.body.editeurs.split(', ');
+  req.body.sujets = req.body.sujets.split(', ');
+  req.body.series = req.body.series.split(', ');
   delete req.body.titre_soustitre;req.body.id = ID;
   var { DBS, DBNS } = get_databases(); // Get databases info
   DBS[DBNS.indexOf(`${DBN}.txt`)] = modifier(req.body, DBS[DBNS.indexOf(`${DBN}.txt`)], req);
-  write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2))
-  res.send(DBS[DBNS.indexOf(`${DBN}.txt`)])
+  write_into(`${db_dir}/${DBN}.txt`, JSON.stringify(DBS[DBNS.indexOf(`${DBN}.txt`)], null, 2));
+  res.redirect(`/src/view/db/${DBN}/${ID}`);
 }).get("/src/mod/db/*/add",           async (req, res) => { // Get infos pour ajouter une instance dans la DB <any>
     var DBN = req.originalUrl.slice(12); DBN = DBN.slice(0, DBN.indexOf("/")); // Get the DB's name
     if (!db_exists(DBN).is_db || !can_write(get_token(req))) {return erreur404(res);}; // Refuse la connection s'il manque des droits

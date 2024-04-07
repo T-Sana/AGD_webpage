@@ -26,7 +26,7 @@
         <tr><td>Format: <%= doc.format %></td></tr>
         <tr><td>Sujets: <%= doc.sujets.join(", ") %></td></tr>
         <tr><td>ID : <%"<"%><%= doc.id %><%">"%></td></tr>
-    </table>
+    </table><br>
     <a href="/src/mod/db/<%= DBN %>/<%= doc.id %>/mod"><button>Modifier</button></a><br>
     <a><button>Supprimer</button></a><br>
     <a><button>Prêter</button></a><br>
